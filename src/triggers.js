@@ -417,6 +417,7 @@ export function maybeRunAfterFindTrigger(
       null,
       null,
       config,
+      null,
       findOptions
     );
     const { success, error } = getResponseObject(
