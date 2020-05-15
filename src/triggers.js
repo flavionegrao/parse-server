@@ -1,6 +1,8 @@
 // triggers.js
 import Parse from 'parse/node';
-import { logger } from './logger';
+import {
+  logger
+} from './logger';
 
 export const Types = {
   beforeLogin: 'beforeLogin',
@@ -20,12 +22,12 @@ export const Types = {
 
 const FileClassName = '@File';
 
-const baseStore = function () {
+const baseStore = function() {
   const Validators = {};
   const Functions = {};
   const Jobs = {};
   const LiveQuery = [];
-  const Triggers = Object.keys(Types).reduce(function (base, key) {
+  const Triggers = Object.keys(Types).reduce(function(base, key) {
     base[key] = {};
     return base;
   }, {});
@@ -176,8 +178,7 @@ export function getFunction(functionName, applicationId) {
 export function getFunctionNames(applicationId) {
   const store =
     (_triggerStore[applicationId] &&
-      _triggerStore[applicationId][Category.Functions]) ||
-    {};
+      _triggerStore[applicationId][Category.Functions]) || {};
   const functionNames = [];
   const extractFunctionNames = (namespace, store) => {
     Object.keys(store).forEach((name) => {
@@ -297,7 +298,7 @@ export function getRequestQueryObject(
 // Any changes made to the object in a beforeSave will be included.
 export function getResponseObject(request, resolve, reject) {
   return {
-    success: function (response) {
+    success: function(response) {
       if (request.triggerName === Types.afterFind) {
         if (!response) {
           response = request.objects;
@@ -332,7 +333,7 @@ export function getResponseObject(request, resolve, reject) {
       }
       return resolve(response);
     },
-    error: function (error) {
+    error: function(error) {
       if (error instanceof Parse.Error) {
         reject(error);
       } else if (error instanceof Error) {
@@ -353,8 +354,7 @@ function logTriggerAfterHook(triggerType, className, input, auth) {
   logger.info(
     `${triggerType} triggered for ${className} for user ${userIdForLog(
       auth
-    )}:\n  Input: ${cleanInput}`,
-    {
+    )}:\n  Input: ${cleanInput}`, {
       className,
       triggerType,
       user: userIdForLog(auth),
@@ -374,8 +374,7 @@ function logTriggerSuccessBeforeHook(
   logger.info(
     `${triggerType} triggered for ${className} for user ${userIdForLog(
       auth
-    )}:\n  Input: ${cleanInput}\n  Result: ${cleanResult}`,
-    {
+    )}:\n  Input: ${cleanInput}\n  Result: ${cleanResult}`, {
       className,
       triggerType,
       user: userIdForLog(auth),
@@ -388,8 +387,7 @@ function logTriggerErrorBeforeHook(triggerType, className, input, auth, error) {
   logger.error(
     `${triggerType} failed for ${className} for user ${userIdForLog(
       auth
-    )}:\n  Input: ${cleanInput}\n  Error: ${JSON.stringify(error)}`,
-    {
+    )}:\n  Input: ${cleanInput}\n  Error: ${JSON.stringify(error)}`, {
       className,
       triggerType,
       error,
@@ -420,7 +418,10 @@ export function maybeRunAfterFindTrigger(
       null,
       findOptions
     );
-    const { success, error } = getResponseObject(
+    const {
+      success,
+      error
+    } = getResponseObject(
       request,
       (object) => {
         resolve(object);
@@ -589,7 +590,7 @@ export function maybeRunTrigger(
   if (!parseObject) {
     return Promise.resolve({});
   }
-  return new Promise(function (resolve, reject) {
+  return new Promise(function(resolve, reject) {
     var trigger = getTrigger(
       parseObject.className,
       triggerType,
@@ -604,7 +605,10 @@ export function maybeRunTrigger(
       config,
       context
     );
-    var { success, error } = getResponseObject(
+    var {
+      success,
+      error
+    } = getResponseObject(
       request,
       (object) => {
         logTriggerSuccessBeforeHook(
@@ -678,11 +682,10 @@ export function maybeRunTrigger(
 // data is either className or an object
 export function inflate(data, restObject) {
   var copy =
-    typeof data == 'object'
-      ? data
-      : {
-        className: data,
-      };
+    typeof data == 'object' ?
+    data : {
+      className: data,
+    };
   for (var key in restObject) {
     copy[key] = restObject[key];
   }
@@ -746,8 +749,7 @@ export async function maybeRunFileTrigger(
       const result = await fileTrigger(request);
       logTriggerSuccessBeforeHook(
         triggerType,
-        'Parse.File',
-        {
+        'Parse.File', {
           ...fileObject.file.toJSON(),
           fileSize: fileObject.fileSize,
         },
@@ -758,8 +760,7 @@ export async function maybeRunFileTrigger(
     } catch (error) {
       logTriggerErrorBeforeHook(
         triggerType,
-        'Parse.File',
-        {
+        'Parse.File', {
           ...fileObject.file.toJSON(),
           fileSize: fileObject.fileSize,
         },
