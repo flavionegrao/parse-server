@@ -220,7 +220,8 @@ export function getRequestObject(
   originalParseObject,
   config,
   context,
-  findOptions
+  findOptions,
+  restWhere
 ) {
   const request = {
     triggerName: triggerType,
@@ -230,6 +231,7 @@ export function getRequestObject(
     headers: config.headers,
     ip: config.ip,
     options: findOptions,
+    query: restWhere
   };
 
   if (originalParseObject) {
@@ -402,7 +404,8 @@ export function maybeRunAfterFindTrigger(
   className,
   objects,
   config,
-  findOptions
+  findOptions,
+  restWhere
 ) {
   return new Promise((resolve, reject) => {
     const trigger = getTrigger(className, triggerType, config.applicationId);
@@ -416,7 +419,8 @@ export function maybeRunAfterFindTrigger(
       null,
       config,
       null,
-      findOptions
+      findOptions,
+      restWhere
     );
     const {
       success,
